@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarm Clock</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="card shadow" style="width: 25rem;">
+            <div class="card-body text-center">
+                <h3 class="card-title mb-4">Set an Alarm</h3>
+                <div class="form-group">
+                    <label for="alarmTime">Select Time</label>
+                    <input type="time" class="form-control" id="alarmTime" required>
+                </div>
+                <button onclick="setAlarm()" class="btn btn-primary btn-block">Set Alarm</button>
+                <p id="alarmStatus" class="mt-3 text-success"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        let alarmTime = null;
+        let alarmTimeout = null;
+
+        function setAlarm() {
+            const input = document.getElementById('alarmTime').value;
+            if (!input) {
+                alert('Please select a time for the alarm.');
+                return;
+            }
+
+            alarmTime = new Date();
+            const [hours, minutes] = input.split(':');
+            alarmTime.setHours(hours);
+            alarmTime.setMinutes(minutes);
+            alarmTime.setSeconds(0);
+
+            document.getElementById('alarmStatus').innerText = `Alarm set for ${alarmTime.toLocaleTimeString()}.`;
+
+            // Clear any previous alarms
+            if (alarmTimeout) clearTimeout(alarmTimeout);
+
+            const timeToAlarm = alarmTime.getTime() - new Date().getTime();
+
+            if (timeToAlarm >= 0) {
+                alarmTimeout = setTimeout(() => {
+                    alert("Time's up! Your alarm is ringing!");
+                    document.getElementById('alarmStatus').innerText = '';
+                }, timeToAlarm);
+            } else {
+                alert('Selected time is in the past. Please choose a future time.');
+            }
+        }
+    </script>
+</body>
+</html>
